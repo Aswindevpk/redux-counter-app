@@ -1,31 +1,24 @@
 import { useState } from "react"
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import { type Post, postAdded } from './postsSlice'
-import { selectAllUsers } from "../users/usersSlice"
+import { selectCurrentUsername } from "../auth/authSlice"
 
 export const AddPostForm = () => {
     const dispatch = useAppDispatch()
-    const users = useAppSelector(selectAllUsers)
+    const userId = useAppSelector(selectCurrentUsername)!
 
     const [title, setTitle] = useState<string>("")
     const [content, setContent] = useState<string>("")
-    const [authorId, setAuthorId] = useState<string>("")
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
 
-        dispatch(postAdded(title, content, authorId))
+        dispatch(postAdded(title, content, userId))
 
         setTitle("")
         setContent("")
-        setAuthorId("")
     }
 
-    const usersOptions = users.map(user => (
-        <option key={user.id} value={user.id}>
-            {user.name}
-        </option>
-    ))
 
     return (
         <section>
@@ -33,12 +26,6 @@ export const AddPostForm = () => {
             <form onSubmit={handleSubmit}>
                 <label htmlFor="postTitle">Post Title:</label>
                 <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} required />
-
-                <label htmlFor="postAuthor">Author:</label>
-                <select id="postAuthor" value={authorId} onChange={(e) => setAuthorId(e.target.value)} name="postAuthor" required>
-                    <option value=""> select an author</option>
-                    {usersOptions}
-                </select>
 
                 <label htmlFor="postContent">Content:</label>
                 <textarea
