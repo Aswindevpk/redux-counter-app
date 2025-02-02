@@ -1,5 +1,5 @@
 // Importing `configureStore` from Redux Toolkit, which simplifies store creation
-import { configureStore } from "@reduxjs/toolkit";
+import {Action,ThunkAction, configureStore } from "@reduxjs/toolkit";
 import postsReducer from "../features/posts/postsSlice";
 import usersReducer from "../features/users/usersSlice";
 import authReducer from "../features/auth/authSlice"
@@ -22,3 +22,8 @@ export type RootState = ReturnType<typeof store.getState>;
 // Defining `AppDispatch`, which represents the dispatch function type for the Redux store
 export type AppDispatch = typeof store.dispatch;
 // This helps when using TypeScript in components to ensure correct dispatch typing
+
+// Export a reusable type for handwritten thunks
+export type AppThunk = ThunkAction<void,RootState,unknown,Action>
+
+
