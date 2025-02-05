@@ -1,16 +1,18 @@
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { Link } from "react-router-dom";
-import { Post,fetchPosts, selectAllPosts, selectPostsError, selectPostsStatus } from "./postsSlice";
+import { fetchPosts,selectPostById,selectPostIds, selectPostsError, selectPostsStatus } from "./postsSlice";
 import { ReactionsButtons } from "./ReactionButtons";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { TimeAgo } from "@/components/TimeAgo";
 import { PostAuthor } from "./PostAuthor";
 
+
 interface PostExcerptProps {
-  post: Post
+  postId:string
 }
 
-function PostExcerpt({ post }: PostExcerptProps) {
+let PostExcerpt= ({ postId }: PostExcerptProps) => {
+  const post = useAppSelector(state=>selectPostById(state,postId))
   return (
     <article className="post-excerpt" key={post.id}>
       <h3>
@@ -26,10 +28,13 @@ function PostExcerpt({ post }: PostExcerptProps) {
   )
 }
 
+//@ts-ignore
+PostExcerpt = React.memo(PostExcerpt)
+
 
 export const PostsList = () => {
   const dispatch = useAppDispatch()
-  const posts = useAppSelector(selectAllPosts)
+  const orderedPostIds = useAppSelector(selectPostIds)
   const postStatus = useAppSelector(selectPostsStatus)
   const postsError = useAppSelector(selectPostsError)
 
@@ -44,9 +49,8 @@ export const PostsList = () => {
   if (postStatus === 'pending') {
     content = <div>Loading...</div>
   } else if (postStatus === "succeeded") {
-    const orderedPosts = posts.slice().sort((a, b) => b.date.localeCompare(a.date))
-    content = orderedPosts.map(post => (
-      <PostExcerpt key={post.id} post={post} />
+    content = orderedPostIds.map(postId => (
+      <PostExcerpt key={postId} postId={postId} />
     ))
     //@ts-ignore
   } else if (postStatus === "rejected"){

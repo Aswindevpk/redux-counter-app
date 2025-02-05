@@ -3,6 +3,9 @@ import {Action,ThunkAction, configureStore } from "@reduxjs/toolkit";
 import postsReducer from "../features/posts/postsSlice";
 import usersReducer from "../features/users/usersSlice";
 import authReducer from "../features/auth/authSlice"
+import notificationReducer from "../features/notifications/notificationsSlice"
+
+import { listenerMiddleware } from "./listenerMiddleware";
 
 // Creating the Redux store using `configureStore`
 export const store = configureStore({
@@ -10,7 +13,10 @@ export const store = configureStore({
     posts:postsReducer,
     users:usersReducer,
     auth:authReducer,
+    notifications:notificationReducer
   },
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware().prepend(listenerMiddleware.middleware)
 });
 
 

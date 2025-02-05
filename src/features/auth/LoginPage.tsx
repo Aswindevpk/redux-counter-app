@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom"
 import { useAppDispatch, useAppSelector } from "../../app/hooks"
 import { selectAllUsers } from "../users/usersSlice"
 import { useState } from "react"
-import { userLoggedIn } from "./authSlice"
+import { login } from "./authSlice"
 
 
 export const LoginPage = () => {
@@ -13,7 +13,7 @@ export const LoginPage = () => {
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        dispatch(userLoggedIn(username))
+        dispatch(login(username))
         navigate('/posts')
     }
 
